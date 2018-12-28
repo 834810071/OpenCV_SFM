@@ -121,7 +121,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="MonocularReconstruction.cpp" />
     <ClCompile Include="PolyocularReconstruction .cpp" />
   </ItemGroup>

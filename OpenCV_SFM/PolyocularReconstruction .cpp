@@ -98,7 +98,7 @@ int main(int argc, char** argv)
 	vector<Mat> rotations;
 	vector<Mat> motions;
 
-	// 初始化结构（三维点云）
+	// 初始化结构（三维点云） 头两幅
 	init_structure(
 		K,
 		key_points_for_all,
@@ -328,7 +328,7 @@ void init_structure(
 	Mat mask;	// mask中大于零的点代表匹配点，等于零的点代表失配点
 	get_matched_points(key_points_for_all[0], key_points_for_all[1], matches_for_all[0], p1, p2);
 	get_matched_colors(colors_for_all[0], colors_for_all[1], matches_for_all[0], colors, c2);
-	find_transform(K, p1, p2, R, T, mask);	// 分解得到R， T 矩阵
+	find_transform(K, p1, p2, R, T, mask);	// 三角分解得到R， T 矩阵
 
 	// 对头两幅图像进行三维重建
 	maskout_points(p1, mask);
@@ -337,7 +337,7 @@ void init_structure(
 
 	Mat R0 = Mat::eye(3, 3, CV_64FC1);
 	Mat T0 = Mat::zeros(3, 1, CV_64FC1);
-	reconstruct(K, R0, T0, R, T, p1, p2, structure);
+	reconstruct(K, R0, T0, R, T, p1, p2, structure);	// 三角化
 	// 保存变换矩阵
 	rotations = { R0, R };
 	motions = { T0, T };
@@ -360,7 +360,7 @@ void init_structure(
 			continue;
 		}
 
-		correspond_struct_idx[0][matches[i].queryIdx] = idx;	// ???
+		correspond_struct_idx[0][matches[i].queryIdx] = idx;	// 如果两个点对应的idx 相等 表明它们是同一特征点 idx 就是structure中对应的空间点坐标索引
 		correspond_struct_idx[1][matches[i].trainIdx] = idx;
 		++idx;
 	}
@@ -512,7 +512,7 @@ void get_objpoints_and_imgpoints(
 		int train_idx = matches[i].trainIdx;
 
 		int struct_idx = struct_indices[query_idx];
-		if (struct_idx < 0)
+		if (struct_idx < 0)	// 表明跟前一副图像没有匹配点
 		{
 			continue;
 		}
@@ -543,7 +543,7 @@ void fusion_structure(
 			continue;
 		}
 
-		// 若该点在空间中已经存在，将该点加入到结构中，且这对匹配点的空间索引都为新加入的点的索引
+		// 若该点在空间中未存在，将该点加入到结构中，且这对匹配点的空间索引都为新加入的点的索引
 		structure.push_back(next_structure[i]);
 		colors.push_back(next_colors[i]);
 		struct_indices[query_idx] = next_struct_indices[train_idx] = structure.size() - 1;
