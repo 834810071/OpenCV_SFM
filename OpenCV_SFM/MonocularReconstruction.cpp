@@ -47,55 +47,55 @@ void maskout_colors(vector<Vec3b>& p1, Mat& mask);
 
 void save_structure(string file_name, vector<Mat>& rotations, vector<Mat>& motions, Mat& structure, vector<Vec3b>& colors);
 
-//int main(int argc, char** argv)
-//{
-//	string img1 = "E:\\VS_code\\OpenCV_SFM\\image\\0004.png";
-//	string img2 = "E:\\VS_code\\OpenCV_SFM\\image\\0006.png";
-//	vector<string> img_names = { img1, img2 };
-//
-//	vector<vector<KeyPoint>> key_points_for_all;
-//	vector<Mat> descriptor_for_all;
-//	vector<vector<Vec3b>> colors_for_all;
-//	vector<DMatch> matches;
-//
-//	// 本征矩阵
-//	Mat K(Matx33d(
-//		2759.48, 0, 1520.69,
-//		0, 2764.16, 1006.81,
-//		0, 0, 1
-//	));
-//
-//	// 提取特征
-//	extract_features(img_names, key_points_for_all, descriptor_for_all, colors_for_all);
-//
-//	// 特征匹配
-//	match_features(descriptor_for_all[0], descriptor_for_all[1], matches);
-//
-//	// 计算变换矩阵
-//	vector<Point2f> p1, p2;
-//	vector<Vec3b> c1, c2;
-//	Mat R, T;	// 旋转矩阵和平移向量
-//	Mat mask;	// mask中大于零的点代表匹配点，等于零的点代表失配点
-//	get_matched_points(key_points_for_all[0], key_points_for_all[1], matches, p1, p2);
-//	get_matched_colors(colors_for_all[0], colors_for_all[1], matches, c1, c2);
-//	find_transform(K, p1, p2, R, T, mask);
-//
-//	// 三维重建
-//	Mat structure;	// 4行N列的矩阵，每一列代表空间中的一个点（齐次坐标）
-//	maskout_points(p1, mask);
-//	maskout_points(p2, mask);
-//	reconstruct(K, R, T, p1, p2, structure);
-//
-//
-//	// 保存并显示
-//	vector<Mat> rotations = { Mat::eye(3, 3, CV_64FC1), R };
-//	vector<Mat> motions = { Mat::zeros(3, 1, CV_64FC1), T };
-//	maskout_colors(c1, mask);
-//	save_structure("E:\\VS_code\\OpenCV_SFM\\Viewer\\structure.yml", rotations, motions, structure, c1);
-//	cout << "successful!!!" << endl;
-//	getchar();
-//	return 0;
-//}
+int main(int argc, char** argv)
+{
+	string img1 = "E:\\VS_code\\OpenCV_SFM\\image\\0004.png";
+	string img2 = "E:\\VS_code\\OpenCV_SFM\\image\\0006.png";
+	vector<string> img_names = { img1, img2 };
+
+	vector<vector<KeyPoint>> key_points_for_all;
+	vector<Mat> descriptor_for_all;
+	vector<vector<Vec3b>> colors_for_all;
+	vector<DMatch> matches;
+
+	// 本征矩阵
+	Mat K(Matx33d(
+		2759.48, 0, 1520.69,
+		0, 2764.16, 1006.81,
+		0, 0, 1
+	));
+
+	// 提取特征
+	extract_features(img_names, key_points_for_all, descriptor_for_all, colors_for_all);
+
+	// 特征匹配
+	match_features(descriptor_for_all[0], descriptor_for_all[1], matches);
+
+	// 计算变换矩阵
+	vector<Point2f> p1, p2;
+	vector<Vec3b> c1, c2;
+	Mat R, T;	// 旋转矩阵和平移向量
+	Mat mask;	// mask中大于零的点代表匹配点，等于零的点代表失配点
+	get_matched_points(key_points_for_all[0], key_points_for_all[1], matches, p1, p2);
+	get_matched_colors(colors_for_all[0], colors_for_all[1], matches, c1, c2);
+	find_transform(K, p1, p2, R, T, mask);
+
+	// 三维重建
+	Mat structure;	// 4行N列的矩阵，每一列代表空间中的一个点（齐次坐标）
+	maskout_points(p1, mask);
+	maskout_points(p2, mask);
+	reconstruct(K, R, T, p1, p2, structure);
+
+
+	// 保存并显示
+	vector<Mat> rotations = { Mat::eye(3, 3, CV_64FC1), R };
+	vector<Mat> motions = { Mat::zeros(3, 1, CV_64FC1), T };
+	maskout_colors(c1, mask);
+	save_structure("E:\\VS_code\\OpenCV_SFM\\Viewer\\structure.yml", rotations, motions, structure, c1);
+	cout << "successful!!!" << endl;
+	getchar();
+	return 0;
+}
 
 void extract_features(
 	vector<string>& image_names,

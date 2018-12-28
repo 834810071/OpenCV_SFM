@@ -71,12 +71,18 @@ string dir = "E:\\VS_code\\OpenCV_SFM\\image\\";
 int main(int argc, char** argv)
 {
 	vector<string> img_names;
+	img_names.push_back(dir + "0000.png");
 	img_names.push_back(dir + "0001.png");
 	img_names.push_back(dir + "0002.png");
 	img_names.push_back(dir + "0003.png");
 	img_names.push_back(dir + "0004.png");
+	img_names.push_back(dir + "0005.png");
 	img_names.push_back(dir + "0006.png");
-
+	img_names.push_back(dir + "0007.png");
+	img_names.push_back(dir + "0008.png");
+	img_names.push_back(dir + "0009.png");
+	img_names.push_back(dir + "0010.png");
+	
 	// ±¾Õ÷¾ØÕó
 	Mat K(Matx33d(
 		2759.48, 0, 1520.69,
